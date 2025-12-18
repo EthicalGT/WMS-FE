@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import "../assets/css/ActionContainer.css";
 import user from "../assets/img/user.png";
-import { registerUser, loginUser } from "../api/auth";
+import { registerHawkerUser, loginHawkerUser } from "../api/auth";
+
+/* ✅ TOAST */
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function ActionContainer() {
   const [activeTab, setActiveTab] = useState("signup");
@@ -10,10 +14,10 @@ function ActionContainer() {
   /* ---------- SIGNUP STATE ---------- */
   const [signupData, setSignupData] = useState({
     full_name: "",
-    phone: "",
+    phone_number: "",
     email: "",
     password: "",
-    aadhar: "",
+    aadhar_number: "",
     address: "",
     city: "",
     pincode: "",
@@ -27,6 +31,23 @@ function ActionContainer() {
     password: "",
   });
 
+  /* ---------- REGEX ---------- */
+  const regex = {
+    full_name: /^[A-Za-z ]{3,50}$/,
+    phone_number: /^[6-9]\d{9}$/,
+    email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/,
+    aadhar_number: /^\d{12}$/,
+    city: /^[A-Za-z ]{2,50}$/,
+    state: /^[A-Za-z ]{2,50}$/,
+    pincode: /^\d{6}$/,
+    zone: /^[A-Za-z0-9 ]{2,30}$/,
+  };
+
+  /* ---------- TOAST HELPERS ---------- */
+  const showError = (msg) => toast.error(msg);
+  const showSuccess = (msg) => toast.success(msg);
+
   /* ---------- HANDLERS ---------- */
   const handleSignupChange = (e) => {
     setSignupData({ ...signupData, [e.target.name]: e.target.value });
@@ -36,88 +57,125 @@ function ActionContainer() {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
-  const handleSignupSubmitHawker = async (e) => {
-    e.preventDefault();
+  /* ---------- VALIDATIONS ---------- */
+  const validateSignup = () => {
+    if (!regex.full_name.test(signupData.full_name))
+      return showError("Invalid full name"), false;
 
-    const res = await registerHawkerUser({ ...signupData, role });
-    alert(res.message || "Registered");
+    if (!regex.phone_number.test(signupData.phone_number))
+      return showError("Invalid phone number"), false;
+
+    if (!regex.email.test(signupData.email))
+      return showError("Invalid email address"), false;
+
+    if (!regex.password.test(signupData.password))
+      return showError(
+        "Password must have uppercase, lowercase, number & special character"
+      ),
+      false;
+
+    if (!regex.aadhar_number.test(signupData.aadhar_number))
+      return showError("Aadhaar must be 12 digits"), false;
+
+    if (!regex.city.test(signupData.city))
+      return showError("Invalid city"), false;
+
+    if (!regex.state.test(signupData.state))
+      return showError("Invalid state"), false;
+
+    if (!regex.pincode.test(signupData.pincode))
+      return showError("Invalid pincode"), false;
+
+    if (!regex.zone.test(signupData.zone))
+      return showError("Invalid zone"), false;
+
+    return true;
   };
 
-  
+  const validateLogin = () => {
+    if (!regex.email.test(loginData.email))
+      return showError("Invalid email"), false;
+
+    if (loginData.password.length < 8)
+      return showError("Password too short"), false;
+
+    return true;
+  };
+
+  /* ---------- SUBMITS ---------- */
+  const handleSignupSubmitHawker = async (e) => {
+    e.preventDefault();
+    if (!validateSignup()) return;
+
+    const res = await registerHawkerUser({ ...signupData, role });
+    res?.success ? showSuccess("Registration successful 🎉") : showError(res.message);
+  };
 
   const handleLoginSubmitHawker = async (e) => {
     e.preventDefault();
+    if (!validateLogin()) return;
 
     const res = await loginHawkerUser({ ...loginData, role });
-
-    if (res.token) {
+    if (res?.token) {
       localStorage.setItem("token", res.token);
-      alert("Login successful");
+      showSuccess("Login successful 🚀");
     } else {
-      alert(res.message || "Login failed");
-    }
-  };
-
-  const handleSignupSubmitVendor = async (e) => {
-    e.preventDefault();
-
-    const res = await registerVendorUser({ ...signupData, role });
-    alert(res.message || "Registered");
-  };
-
-  
-
-  const handleLoginSubmitVendor = async (e) => {
-    e.preventDefault();
-
-    const res = await loginVendorUser({ ...loginData, role });
-
-    if (res.token) {
-      localStorage.setItem("token", res.token);
-      alert("Login successful");
-    } else {
-      alert(res.message || "Login failed");
+      showError(res.message || "Login failed");
     }
   };
 
   return (
     <div className="page">
-      <div className="card">
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        theme="dark"
+        newestOnTop
+        pauseOnHover
+      />
 
-        {/* HEADER */}
+      <div className="card">
         <div className="card-header">
           <h2>Hawker & Vendor Portal</h2>
           <p>Register or sign in to manage your profile</p>
         </div>
 
-        {/* TABS */}
         <div className="tabs">
-          <button className={activeTab === "signup" ? "tab active" : "tab"} onClick={() => setActiveTab("signup")}>
+          <button
+            className={activeTab === "signup" ? "tab active" : "tab"}
+            onClick={() => setActiveTab("signup")}
+          >
             Sign Up
           </button>
-          <button className={activeTab === "signin" ? "tab active" : "tab"} onClick={() => setActiveTab("signin")}>
+          <button
+            className={activeTab === "signin" ? "tab active" : "tab"}
+            onClick={() => setActiveTab("signin")}
+          >
             Sign In
           </button>
         </div>
 
-        {/* ROLES */}
         <div className="roles">
-          <button className={role === "hawker" ? "role active" : "role"} onClick={() => setRole("hawker")}>
+          <button
+            className={role === "hawker" ? "role active" : "role"}
+            onClick={() => setRole("hawker")}
+          >
             Hawker
           </button>
-          <button className={role === "vendor" ? "role active" : "role"} onClick={() => setRole("vendor")}>
+          <button
+            className={role === "vendor" ? "role active" : "role"}
+            onClick={() => setRole("vendor")}
+          >
             Vendor
           </button>
         </div>
 
-        {/* PHOTO */}
         <div className="photo-upload">
           <label className="photo-circle">
             <img src={user} alt="Profile" />
           </label>
         </div>
 
-        {/* ---------- SIGN UP ---------- */}
         {activeTab === "signup" && (
           <form className="form" onSubmit={handleSignupSubmitHawker}>
             <h4>PERSONAL DETAILS</h4>
@@ -142,24 +200,12 @@ function ActionContainer() {
           </form>
         )}
 
-        {/* ---------- SIGN IN ---------- */}
         {activeTab === "signin" && (
           <form className="form" onSubmit={handleLoginSubmitHawker}>
             <h4>LOGIN</h4>
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              onChange={handleLoginChange}
-            />
-
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              onChange={handleLoginChange}
-            />
+            <input name="email" type="email" placeholder="Email" onChange={handleLoginChange} />
+            <input name="password" type="password" placeholder="Password" onChange={handleLoginChange} />
 
             <button className="submit-btn">Login as {role}</button>
           </form>
