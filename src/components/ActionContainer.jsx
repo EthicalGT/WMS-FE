@@ -3,15 +3,17 @@ import "../assets/css/ActionContainer.css";
 import user from "../assets/img/user.png";
 import { registerHawkerUser, loginHawkerUser } from "../api/auth";
 
-/* ✅ TOAST */
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function ActionContainer() {
   const [activeTab, setActiveTab] = useState("signin");
   const [role, setRole] = useState("hawker");
+  const currentState = activeTab === "signin" ? "HMS Sign In" : "HMS Sign Up";
 
-  /* ---------- SIGNUP STATE ---------- */
+
+
+
   const [signupData, setSignupData] = useState({
     full_name: "",
     phone_number: "",
@@ -25,7 +27,6 @@ function ActionContainer() {
     zone: "",
   });
 
-  /* ---------- LOGIN STATE ---------- */
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -136,7 +137,7 @@ function ActionContainer() {
 
       <div className="card">
         <div className="card-header">
-          <h2>HMS Sign Up/Sign In</h2>
+          <h2>{currentState}</h2>
           <p>HMS service usage needs authentication kindly verify with your credentials.</p>
         </div>
 
@@ -191,10 +192,47 @@ function ActionContainer() {
             <h4>ADDRESS</h4>
             <textarea name="address" placeholder="Address" onChange={handleSignupChange}></textarea>
 
-            <input name="city" placeholder="City" onChange={handleSignupChange} />
+            <input name="city" placeholder="Prefered_city" onChange={handleSignupChange} />
             <input name="pincode" placeholder="Pincode" onChange={handleSignupChange} />
             <input name="state" placeholder="State" onChange={handleSignupChange} />
             <input name="zone" placeholder="Zone" onChange={handleSignupChange} />
+            {role === "vendor" && (
+              <>
+                <h4>BUSINESS DETAILS</h4>
+                <select
+                  name="product_category"
+                  value={signupData.product_category}
+                  onChange={handleSignupChange}
+                >
+                  <option value="">Select Product Category</option>
+                  <option value="vegetables">Vegetables</option>
+                  <option value="beverage">Beverage</option>
+                  <option value="street_food">Street Food</option>
+                  <option value="snacks">Snacks</option>
+                  <option value="fruits">Fruits</option>
+                  <option value="dairy_product">Dairy Product</option>
+                  <option value="bakery_item">Bakery Item</option>
+                  <option value="meat_seafood">Meat & Seafood</option>
+                  <option value="flowers">Flowers</option>
+                  <option value="groceries">Groceries</option>
+                  <option value="sweet">Sweet</option>
+                  <option value="spices">Spices</option>
+                </select>
+
+
+                <input
+                  name="gst_number"
+                  placeholder="GST Number"
+                  onChange={handleSignupChange}
+                />
+
+                <input
+                  name="Firm_name"
+                  placeholder="Firm name"
+                  onChange={handleSignupChange}
+                />
+              </>
+            )}
 
             <button className="submit-btn">Register as {role}</button>
           </form>

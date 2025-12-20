@@ -13,20 +13,26 @@
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 15px;
 }
 
-/* Header */
-.card-header {
+.card .card-header {
   background: #2563eb;
-  color: white;
-  text-align: center;
+  color: #fff;
   display: flex;
   flex-direction: column;
+  text-align: center;
   padding: 25px 15px;
 }
 
 .card-header h2 {
   color: #fff;
+  text-align: center;
+  flex-direction: column;
+
 }
 
 .card-header .icon {
@@ -130,6 +136,7 @@
   font-size: 12px;
   margin: 15px 0 8px;
   color: #2563eb;
+  text-align: left;
 }
 
 .form label {
@@ -145,6 +152,11 @@
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 14px;
+  outline: none;
+}
+
+.form input:hover {
+  border: 1px solid #2563eb;
 }
 
 textarea {
@@ -169,6 +181,12 @@ select {
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  outline: none;
+
+}
+
+select:hover {
+  border: 1px solid #2563eb;
 }
 
 /* Mobile */
