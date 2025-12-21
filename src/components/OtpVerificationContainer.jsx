@@ -76,7 +76,7 @@ const OtpVerificationContainer = () => {
 
         setTimeout(() => {
           window.location.href = "/";
-        }, 5000);
+        }, 3000);
       } finally {
         setCheckingSession(false);
       }
