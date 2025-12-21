@@ -6,9 +6,9 @@ export async function verifyOTP(data) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Accept": "application/json",
             },
             body: JSON.stringify(data),
-            credentials: include,
         });
 
         if (!res.ok) {

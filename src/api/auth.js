@@ -6,9 +6,9 @@ export async function registerHawkerUser(data) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
       },
       body: JSON.stringify(data),
-      credentials: "include",
     });
 
     if (!res.ok) {
@@ -41,9 +41,9 @@ export async function loginHawkerUser(data) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
       },
       body: JSON.stringify(data),
-      credentials: "include",
     });
 
     if (!res.ok) {
@@ -69,21 +69,15 @@ export async function loginHawkerUser(data) {
   }
 }
 
-
-
-
-
-
-
 export async function registerVendorUser(data) {
   try {
     const res = await fetch(`${BASE_URL}/vendor/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
       },
       body: JSON.stringify(data),
-      credentials: "include",
     });
 
     if (!res.ok) {
@@ -110,15 +104,15 @@ export async function registerVendorUser(data) {
   }
 }
 
-export async function loginVendorUser(data) {
+export async function loginVendorUser(otp, email) {
   try {
     const res = await fetch(`${BASE_URL}/vendor/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
       },
-      body: JSON.stringify(data),
-      credentials: "include",
+      body: JSON.stringify({ otp, email }),
     });
 
     if (!res.ok) {
@@ -152,8 +146,8 @@ export async function getCurrentVerificationUser() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
       },
-      credentials: "include", 
     });
 
     const data = await res.json(); 

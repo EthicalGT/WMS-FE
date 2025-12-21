@@ -99,16 +99,16 @@ const OtpVerificationContainer = () => {
     setLoading(true);
 
     try {
-      const res = await verifyOTP({ otp: myotp });
+      const res = await verifyOTP({ otp: myotp, email: email });
 
-      if (res?.data?.status === "success") {
+      if (res?.status === "success") {
         showSuccess("OTP verified successfully");
 
         setTimeout(() => {
-          window.location.href = res.data.redirectTo;
+          window.location.href = res.redirectTo;
         }, 1500);
       } else {
-        showError(res?.data?.message || "OTP verification failed");
+        showError(res?.message || "OTP verification failed");
       }
     } catch (error) {
       showError("Something went wrong");

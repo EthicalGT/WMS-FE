@@ -114,7 +114,7 @@ function ActionContainer() {
   const res = await registerHawkerUser({ ...signupData, role });
 
   if (res.status === "success") {
-    showSuccess(res.message || "Registration successful 🎉");
+    showSuccess(res.message || "Registration successful.");
 
     if (res.redirectTo) {
       window.location.href = res.redirectTo;
@@ -133,7 +133,7 @@ const handleLoginSubmitHawker = async (e) => {
     const res = await loginHawkerUser({ ...loginData, role });
     if (res?.token) {
       localStorage.setItem("token", res.token);
-      showSuccess("Login successful 🚀");
+      showSuccess("Login successful.");
     } else {
       showError(res.message || "Login failed");
     }
@@ -147,7 +147,7 @@ const handleSignupSubmitVendor = async (e) => {
   const res = await registerVendorUser({ ...signupData, role });
 
   if (res.status === "success") {
-    showSuccess(res.message || "Registration successful 🎉");
+    showSuccess(res.message || "Registration successful.");
 
     if (res.redirectTo) {
       window.location.href = res.redirectTo;
@@ -165,7 +165,7 @@ const handleSignupSubmitVendor = async (e) => {
     const res = await loginVendorUser({ ...loginData, role });
     if (res?.token) {
       localStorage.setItem("token", res.token);
-      showSuccess("Login successful 🚀");
+      showSuccess("Login successful.");
     } else {
       showError(res.message || "Login failed");
     }
