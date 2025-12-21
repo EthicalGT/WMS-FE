@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../assets/css/ActionContainer.css";
 import user from "../assets/img/user.png";
-import { registerHawkerUser, loginHawkerUser } from "../api/auth";
+import { registerHawkerUser, loginHawkerUser, registerVendorUser, loginVendorUser } from "../api/auth";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 
 function ActionContainer() {
+
+  const[loading,setLoading]=useState("false");
   const [activeTab, setActiveTab] = useState("signin");
   const [role, setRole] = useState("hawker");
   const currentState = activeTab === "signin" ? "HMS Sign In" : "HMS Sign Up";
@@ -123,11 +125,44 @@ function ActionContainer() {
 };
 
 
-  const handleLoginSubmitHawker = async (e) => {
+const handleLoginSubmitHawker = async (e) => {
     e.preventDefault();
     if (!validateLogin()) return;
 
+    
     const res = await loginHawkerUser({ ...loginData, role });
+    if (res?.token) {
+      localStorage.setItem("token", res.token);
+      showSuccess("Login successful 🚀");
+    } else {
+      showError(res.message || "Login failed");
+    }
+  };
+
+
+const handleSignupSubmitVendor = async (e) => {
+  e.preventDefault();
+  if (!validateSignup()) return;
+
+  const res = await registerVendorUser({ ...signupData, role });
+
+  if (res.status === "success") {
+    showSuccess(res.message || "Registration successful 🎉");
+
+    if (res.redirectTo) {
+      window.location.href = res.redirectTo;
+    }
+  } else {
+    showError(res?.message || "Registration failed");
+  }
+};
+
+
+  const handleLoginSubmitVendor = async (e) => {
+    e.preventDefault();
+    if (!validateLogin()) return;
+
+    const res = await loginVendorUser({ ...loginData, role });
     if (res?.token) {
       localStorage.setItem("token", res.token);
       showSuccess("Login successful 🚀");
@@ -164,7 +199,9 @@ function ActionContainer() {
 
         {/* ---------- SIGN UP ---------- */}
         {activeTab === "signup" && (
-          <form className="form" onSubmit={handleSignupSubmitHawker}>
+          <form className="form" onSubmit={role === "hawker" 
+    ? handleSignupSubmitHawker 
+    : handleSignupSubmitVendor}>
             <h4>PERSONAL DETAILS</h4>
 
             <div className="input-group"><User className="input-icon" /><input name="full_name" placeholder="Full Name" onChange={handleSignupChange} /></div>
@@ -225,7 +262,11 @@ function ActionContainer() {
 
         {/* ---------- SIGN IN ---------- */}
         {activeTab === "signin" && (
-          <form className="form" onSubmit={handleLoginSubmitHawker}>
+          <form className="form" 
+
+          onSubmit={role === "hawker" 
+    ? handleLoginSubmitHawker 
+    : handleLoginSubmitVendor}>
             <h4>VERIFY CREDENTIALS</h4>
             <div className="input-group"><Mail className="input-icon" /><input name="email" type="email" placeholder="Email" onChange={handleLoginChange} /></div>
             <div className="input-group"><Lock className="input-icon" /><input name="password" type="password" placeholder="Password" onChange={handleLoginChange} /></div>
