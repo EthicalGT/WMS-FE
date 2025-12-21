@@ -1,18 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import "../assets/css/CompanyProfileContainer.css";
 import {
     Building2,
     MapPin,
     Phone,
     Mail,
-    Edit2
+    Edit2,
+    Menu,
+    X
 } from "lucide-react";
 
 function CompanyProfile() {
+    const [menuOpen, setMenuOpen] = useState(false);
+
     return (
         <div className="app-layout">
             {/* Sidebar */}
-            <aside className="sidebar">
+            <aside className={`sidebar ${menuOpen ? "sidebar-open" : ""}`}>
                 <div className="logo">HMS</div>
 
                 <nav className="menu">
@@ -33,16 +37,27 @@ function CompanyProfile() {
 
             {/* Main */}
             <main className="main">
+                {/* Topbar */}
                 <header className="topbar">
+                    {/* Hamburger */}
+                    <button
+                        className="hamburger-btn"
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        aria-label="Toggle Menu"
+                    >
+                        <Menu size={22} />
+                    </button>
+
+
                     <h1>Company Profile</h1>
+
                     <div className="user-info">
                         <span>Fresh Farms</span>
-                        <small>Vendor</small>
+
                     </div>
                 </header>
 
                 <section className="profile-card">
-                    {/* Header */}
                     <div className="profile-header">
                         <div className="company-info">
                             <div className="company-icon">
@@ -59,9 +74,8 @@ function CompanyProfile() {
                         </button>
                     </div>
 
-                    {/* Content */}
                     <div className="profile-content">
-                        <div className="left">
+                        <div>
                             <div className="field">
                                 <label>Business Name</label>
                                 <input value="Fresh Farms Pvt Ltd" readOnly />
@@ -73,25 +87,19 @@ function CompanyProfile() {
                             </div>
 
                             <div className="field">
-                                <label>
-                                    <Phone size={16} /> Contact Number
-                                </label>
+                                <label><Phone size={16} /> Contact Number</label>
                                 <input value="+91 98765 43210" readOnly />
                             </div>
 
                             <div className="field">
-                                <label>
-                                    <Mail size={16} /> Email Address
-                                </label>
+                                <label><Mail size={16} /> Email Address</label>
                                 <input value="contact@freshfarms.in" readOnly />
                             </div>
                         </div>
 
-                        <div className="right">
+                        <div>
                             <div className="field">
-                                <label>
-                                    <MapPin size={16} /> Business Address
-                                </label>
+                                <label><MapPin size={16} /> Business Address</label>
                                 <textarea
                                     readOnly
                                     value="Plot 45, Industrial Area, Sector 12, Pune, Maharashtra - 411057"
