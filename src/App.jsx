@@ -8,8 +8,6 @@ import HawkerDashboardContainer from "./components/HawkerDashboardContainer";
 import SupervisorDashboardContainer from "./components/SupervisorDashboardContainer";
 import VendorDashboardContainer from "./components/VendorDashboardContainer";
 
-
-
 function App() {
   return (
     <>
