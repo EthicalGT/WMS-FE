@@ -35,8 +35,7 @@ function App() {
           path="/supervisor/dashboard"
           element={<SupervisorDashboardContainer />}
         />
-
-
+        {/* Administrator Routes*/}
         <Route path="/admin/dashboard" element={<AdminPanelContainer />} />
       </Routes>
     </>
