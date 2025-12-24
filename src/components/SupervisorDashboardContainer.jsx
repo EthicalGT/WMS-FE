@@ -1,127 +1,175 @@
-import { useState } from "react";
-import "../assets/css/SupervisorDashboardContainer.css";
+import { useState, useEffect } from "react";
+import "../assets/css/DashboardContainer.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
   faUser,
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { getHawkerDetails } from "../api/hawker_details";
+import NotificationsContainer from "./hawker/NotificationsContainer";
+import SettingsSecurityContainer from "./hawker/SettingsSecurityContainer";
+import SupervisorDashboard from "./supervisor/SupervisorDashboard";
+import AssignedHawkers from "./supervisor/AssignedHawkers";
+import LiveSalesMonitoring from "./supervisor/LiveSalesMonitoring";
+import InventoryOversight from "./supervisor/InventoryOversight";
+import AlertsViolations from "./supervisor/AlertsViolations";
+import AssetMonitoring from "./supervisor/AssetMonitoring";
+import Messages from "./supervisor/Messages";
+import Reports from "./supervisor/Reports";
+import Settings from "./supervisor/Settings";
 
 export default function SupervisorDashboardContainer() {
   const [open, setOpen] = useState(false);
-  const [user, setUsername] = useState("GT");
+  const [user, setUsername] = useState("Tejas Jadhav");
+  const [activeView, setActiveView] = useState("dashboard");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await getHawkerDetails();
+      if (res.status === "success") {
+        setUsername(res.data.full_name);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="app">
       <aside className={`sidebar ${open ? "open" : ""}`}>
         <div className="logo">HMS</div>
-
         <nav className="nav">
-          <Link to="/dashboard" className="active">
+          <span
+            onClick={() => setActiveView("dashboard")}
+            className={activeView === "dashboard" ? "active" : ""}
+          >
             Dashboard
-          </Link>
-          <Link to="/company_profile">Company Profile</Link>
-          <Link to="/products">Product Catalog</Link>
-          <Link to="/purchase-orders">Purchase Orders</Link>
-          <Link to="/supply-delivery">Supply & Delivery</Link>
-          <Link to="/inventory">Inventory Summary</Link>
-          <Link to="/payments">Payments & Invoices</Link>
-          <Link to="/notifications">Notifications</Link>
-          <Link to="/support">Support / Messages</Link>
-          <Link to="/settings">Settings</Link>
+          </span>
+
+          <span
+            onClick={() => setActiveView("assignedHawker")}
+            className={activeView === "assignedHawker" ? "active" : ""}
+          >
+            Assigned Hawker
+          </span>
+
+          <span
+            onClick={() => setActiveView("liveSale")}
+            className={activeView === "liveSale" ? "active" : ""}
+          >
+            Live sales Monitoring
+          </span>
+
+          <span
+            onClick={() => setActiveView("inventory")}
+            className={activeView === "inventory" ? "active" : ""}
+          >
+            Inventory Oversight
+          </span>
+
+          <span
+            onClick={() => setActiveView("assetMonitoring")}
+            className={activeView === "assetMonitoring" ? "active" : ""}
+          >
+            Asset Monitoring
+          </span>
+
+          <span
+            onClick={() => setActiveView("alerts")}
+            className={activeView === "alerts" ? "active" : ""}
+          >
+            Alerts and violations
+          </span>
+
+          <span
+            onClick={() => setActiveView("message")}
+            className={activeView === "message" ? "active" : ""}
+          >
+            Message
+          </span>
+
+          <span
+            onClick={() => setActiveView("report")}
+            className={activeView === "report" ? "active" : ""}
+          > 
+          Report
+          </span>
+
+
+          <span
+            onClick={() => setActiveView("settings")}
+            className={activeView === "settings" ? "active" : ""}
+          >
+            Settings
+          </span>
         </nav>
 
         <div className="logout">
-          <FontAwesomeIcon icon={faRightFromBracket} />
-          Logout
+          <FontAwesomeIcon icon={faRightFromBracket} /> Logout
         </div>
       </aside>
-
       {open && <div className="overlay" onClick={() => setOpen(false)}></div>}
-
       <div className="main">
         <div className="topbar">
           <button className="hamburger" onClick={() => setOpen(!open)}>
             ☰
           </button>
-
-          <h1>Hawker Dashboard</h1>
-
+          <h1> Supervisor Dashboard</h1>
           <div className="user">
             <FontAwesomeIcon icon={faBell} className="alert" />
             <FontAwesomeIcon icon={faUser} className="profile" />
-            <div className="username">Fresh Farms</div>
+            <div className="username">{user}</div>
+            {/* <div className="username">Tejas Jadhav</div> */}
           </div>
         </div>
-
         <div className="content">
-          <div className="welcome">
-            <h2>Welcome back, {user}! 👋</h2>
-            <p>Here's an overview of your business performance today.</p>
-          </div>
-
-          <div className="grid">
-            <div className="card">
-              <div className="card-container">
-                <div className="icon">📦</div>
-                <span>Total Products Listed</span>
+          {activeView === "dashboard" && (
+            <div className="content">
+              <div className="welcome">
+                <div className="welcome-content">
+                  <h2>Welcome back, {user}! 👋</h2>
+                  <p>
+                    Here’s a quick overview of your sales activity for today.
+                  </p>
+                </div>
+                <div className="welcome-supervisor-info"></div>
               </div>
-              <h3>124</h3>
-              <div className="sub up">↗ 12% vs last month</div>
+              <div>
+                <SupervisorDashboard/>
             </div>
-
-            <div className="card">
-              <div className="card-container">
-                <div className="icon">📋</div>
-                <span>Active Purchase Orders</span>
-                <span className="badge active-badge">Active</span>
-              </div>
-              <h3>18</h3>
             </div>
+          )}
+          {activeView === "assignedHawker" && <AssignedHawkers />}
 
-            <div className="card">
-              <div className="card-container">
-                <div className="icon">🚚</div>
-                <span>Items Supplied (This Month)</span>
-              </div>
-              <h3>2,847</h3>
-              <div className="sub up">↗ 8% Monthly</div>
-            </div>
+          
 
-            <div className="card">
-              <div className="card-container">
-                <div className="icon">⏳</div>
-                <span>Pending Deliveries</span>
-                <span className="badge pending-badge">Pending</span>
-              </div>
-              <h3>7</h3>
-            </div>
+          {activeView === "liveSale" && (
+            <LiveSalesMonitoring />
+          )}
 
-            <div className="card">
-              <div className="card-container">
-                <div className="icon">₹</div>
-                <span>Total Revenue</span>
-              </div>
-              <h3>₹4,85,200</h3>
-              <div className="sub up">↗ 15% This month</div>
-            </div>
+          {activeView === "inventory" && (
+            <InventoryOversight />
+          )}
 
-            <div className="card">
-              <div className="card-container">
-                <div className="icon">💳</div>
-                <span>Payment Status</span>
-              </div>
-              <div className="paybox paid">
-                <span>Paid</span>
-                <span>₹3,85,200</span>
-              </div>
-              <div className="paybox pending">
-                <span>Pending</span>
-                <span>₹1,00,000</span>
-              </div>
-            </div>
-          </div>
+          {activeView === "alerts" && (
+            <AlertsViolations />
+          )}
+
+          {activeView === "assetMonitoring" && (
+            <AssetMonitoring />
+          )}
+
+          {activeView === "message" && (
+            <Messages />
+          )}
+
+          {activeView === "report" && (
+            <Reports />
+          )}
+
+          {activeView === "settings" && (
+            <Settings />
+          )}
         </div>
       </div>
     </div>
