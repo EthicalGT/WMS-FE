@@ -7,6 +7,7 @@ import { Routes, Route } from "react-router-dom";
 import HawkerDashboardContainer from "./components/HawkerDashboardContainer";
 import SupervisorDashboardContainer from "./components/SupervisorDashboardContainer";
 import VendorDashboardContainer from "./components/VendorDashboardContainer";
+import AdminPanelContainer from "./components/AdminPanelContainer";
 
 function App() {
   return (
@@ -34,6 +35,9 @@ function App() {
           path="/supervisor/dashboard"
           element={<SupervisorDashboardContainer />}
         />
+
+
+        <Route path="/admin/dashboard" element={<AdminPanelContainer />} />
       </Routes>
     </>
   );
